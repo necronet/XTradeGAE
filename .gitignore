@@ -2,6 +2,7 @@
 
 #Pycharm
 .idea
+.idea/*
 
 # Packages
 *.egg
