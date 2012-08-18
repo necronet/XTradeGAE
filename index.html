@@ -5,18 +5,20 @@
 
   <body>
     {% for trader in traders %}
-      {% if trader.author %}
-        User: <b>{{ trader.author }}</b>
+      {% if trader.created_by %}
+        User: <b>{{ trader.created_by }}</b>
       {% endif %}
     <div>
       <span>Name: {{ trader.name|escape }}</span>
       <span>Address: <b>{{ trader.address }}</b></span>
+      <span>Website: <b>{{ trader.website }}</b></span>
     </div>
     {% endfor %}
 
-    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
-      <div><input type='text' name="name"  /></div>
-      <div><textarea type='text' name="address" rows="3" cols="60" ></textarea></div>
+    <form action="/sign" method="post">
+      <div>Name: <input type='text' name="name"  /></div>
+      <div>Website: <input type='text' name="website"  /></div>
+      <div>Address: <textarea type='text' name="address" rows="3" cols="60" ></textarea></div>
         
       <div><input type="submit" value="Sign Guestbook"></div>
     </form>

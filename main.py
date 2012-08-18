@@ -10,21 +10,10 @@ import jinja2
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-def guestbook_key(guestbook_name=None):
-  """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
-  return db.Key.from_path('Guestbook', guestbook_name or 'default_guestbook')
-
-
 class MainPage(webapp2.RequestHandler):
     def get(self):
 
-        
-        guestbook_name=self.request.get('guestbook_name')
-
-        logging.debug('Start mainpage guestbook is %s',guestbook_name)
-
-        traders_query = Trader.all().ancestor(
-            guestbook_key(guestbook_name)).order('-created_on')
+        traders_query = Trader.all().order('-created_on')
         traders = traders_query.fetch(10)
 
         if users.get_current_user():
@@ -37,8 +26,7 @@ class MainPage(webapp2.RequestHandler):
         template_values = {
             'traders': traders,
             'url': url,
-            'url_linktext': url_linktext,
-            'guestbook_name': guestbook_name
+            'url_linktext': url_linktext
         }
 
         template = jinja_environment.get_template('index.html')
@@ -51,19 +39,19 @@ class Guestbook(webapp2.RequestHandler):
     # the same entity group. Queries across the single entity group will be
     # consistent. However, the write rate to a single entity group should
     # be limited to ~1/second.
-    guestbook_name = self.request.get('guestbook_name')
 
+    trader = Trader(name=self.request.get('name'))
 
-    trader = Trader(parent=guestbook_key(guestbook_name))
+    trader.address = self.request.get('address')
+    trader.website = self.request.get('website')
 
     if users.get_current_user():
       trader.author = users.get_current_user().nickname()
 
-    trader.name = self.request.get('name')
-    trader.address = self.request.get('address')
+
     
     trader.put()
-    self.redirect('/?' + urllib.urlencode({'guestbook_name': guestbook_name}))
+    self.redirect('/')
 
 
 app = webapp2.WSGIApplication([('/', MainPage),
