@@ -1,0 +1,27 @@
+<html>
+ <head>
+    <link type="text/css" rel="stylesheet" href="/css/style.css" />
+  </head>
+
+  <body>
+    {% for trader in traders %}
+      {% if trader.author %}
+        User: <b>{{ trader.author }}</b>
+      {% endif %}
+    <div>
+      <span>Name: {{ trader.name|escape }}</span>
+      <span>Address: <b>{{ trader.address }}</b></span>
+    </div>
+    {% endfor %}
+
+    <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
+      <div><input type='text' name="name"  /></div>
+      <div><textarea type='text' name="address" rows="3" cols="60" ></textarea></div>
+        
+      <div><input type="submit" value="Sign Guestbook"></div>
+    </form>
+
+    <a href="{{ url }}">{{ url_linktext }}</a>
+
+  </body>
+</html>
