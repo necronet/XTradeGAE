@@ -1,29 +1,11 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html>
- <head>
-    <link type="text/css" rel="stylesheet" href="/css/style.css" />
-  </head>
+<head>
+    <title>XTrade Application</title>
+</head>
+<body>
 
-  <body>
-    {% for trader in traders %}
-      {% if trader.created_by %}
-        User: <b>{{ trader.created_by }}</b>
-      {% endif %}
-    <div>
-      <span>Name: {{ trader.name|escape }}</span>
-      <span>Address: <b>{{ trader.address }}</b></span>
-      <span>Website: <b>{{ trader.website }}</b></span>
-    </div>
-    {% endfor %}
-
-    <form action="/sign" method="post">
-      <div>Name: <input type='text' name="name"  /></div>
-      <div>Website: <input type='text' name="website"  /></div>
-      <div>Address: <textarea type='text' name="address" rows="3" cols="60" ></textarea></div>
-        
-      <div><input type="submit" value="Sign Guestbook"></div>
-    </form>
-
-    <a href="{{ url }}">{{ url_linktext }}</a>
-
-  </body>
+<div>XTrade</div>
+</body>
 </html>
