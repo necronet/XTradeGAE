@@ -1,6 +1,7 @@
 import logging
 import webapp2
 from model import Trader
+import json
 from google.appengine.ext import db
 from google.appengine.api import users
 import os
@@ -12,24 +13,17 @@ jinja_environment = jinja2.Environment(
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        template = jinja_environment.get_template('index.html')
+        template = jinja_environment.get_template('templates/index.html')
         self.response.out.write(template.render())
 
 class TraderPage(webapp2.RequestHandler):
     def get(self,*kwargs):
 
-        traders_query = Trader.all().order('-created_on')
-        traders = traders_query.fetch(10)
-
-        if len(traders) == 0:
-            logging.info('No traders assign for user %s', users)
-
         template_values = {
-            'traders': traders,
             'logout_url':users.create_logout_url(self.request.uri)
         }
 
-        template = jinja_environment.get_template('trader.html')
+        template = jinja_environment.get_template('templates/trader.html')
         self.response.out.write(template.render(template_values))
         
     def post(self,*kwargs):
@@ -45,7 +39,29 @@ class TraderPage(webapp2.RequestHandler):
         trader.put()
         self.redirect('/traders/')
 
+class JsonTraderPage(webapp2.RequestHandler):
+    def get(self, *kwargs):
+        traders_query = Trader.all().order('-created_on')
+        traders = traders_query.fetch(10)
+        data = json.encode(traders)
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        self.response.out.write(data)
+
 class TraderListPage(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write('<html><body>HOLA</body></html>')
+
+        traders_query = Trader.all().order('-created_on')
+        traders = traders_query.fetch(10)
+        
+        if len(traders) == 0:
+            logging.info('No traders assign for user %s', users)
+            
+
+        template_values={
+                'traders':traders
+        }
+
+        template= jinja_environment.get_template('templates/trader_list.html')
+
+        self.response.out.write(template.render(template_values))
 

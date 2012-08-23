@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<title>Traders List</title>
+
+<a href="traders/add">Add</a>
+
+{% for trader in traders %}
+ <div>
+  
+  <span>{{ trader.name|escape }}</span>
+  <span>{{ trader.address }}</span>
+  <span>{{ trader.website }}</span>
+
+</div>
+{% endfor %}
+
+
+</html>
