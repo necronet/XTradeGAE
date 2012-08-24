@@ -1,6 +1,6 @@
 import logging
 import webapp2
-from model import Trader
+from model import Trader,Contact
 import json
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -37,6 +37,13 @@ class TraderPage(webapp2.RequestHandler):
         trader.author = users.get_current_user().nickname()
 
         trader.put()
+
+        #TODO: put real values here
+        contact = Contact(name='Example of contact')
+        contact.trader=trader
+        contact.put()
+
+
         self.redirect('/traders/')
 
 class JsonTraderPage(webapp2.RequestHandler):
