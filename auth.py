@@ -7,6 +7,7 @@ from webapp2_extras import sessions
 from webapp2_extras.auth import InvalidAuthIdError
 from webapp2_extras.auth import InvalidPasswordError
 import logging
+from google.appengine.ext import db
 
 
 jinja_environment = jinja2.Environment(
@@ -122,7 +123,6 @@ class CreateUserHandler(BaseHandler):
         template = jinja_environment.get_template('templates/create_user.html')
         self.response.out.write(template.render({}))
 
-    @user_required
     def post(self):
         """
               username: Get the username from POST dict
@@ -133,7 +133,10 @@ class CreateUserHandler(BaseHandler):
         # Passing password_raw=password so password will be hashed
         # Returns a tuple, where first value is BOOL. If True ok, If False no new user is created
         user = self.auth.store.user_model.create_user(username, password_raw=password)
+
         if not user[0]: #user is a tuple
+            logging.info( db.GqlQuery("SELECT * FROM User" ))
+
             return user[1] # Error message
         else:
             # User is created, let's try redirecting to login page
