@@ -63,14 +63,20 @@
 
     <div>
     <div id="data" style="float:left;display: inline;width: 500px; height: 500px">
-    <form action="/traders/add" method="post">
+    <form action="/traders/add" enctype="multipart/form-data" method="post">
       <div>Name: <input type='text' name="name"  /></div>
       <div>Website: <input type='text' name="website"  /></div>
       <div>Address: <textarea type='text' name="address" rows="3" cols="60" ></textarea></div>
-      <div>Long: <input id="latitude" type='hidden' name="longitude"  /></div>
-      <div>Lat: <input id="longitude" type='hidden' name="latitude"  /></div>
+      <div><input type="file" name="logo"/></div>
+      <input type='hidden' name="latitude" id="latitude"  />
+      <input type='hidden' name="longitude"  id="longitude"  />
+
       <div><input type="submit" value="Add Trader"></div>
+
+        
     </form>
+
+
     </div>
 
     <div id="map_canvas" style="float:left;display: inline;width: 500px; height: 300px;float:left"></div>

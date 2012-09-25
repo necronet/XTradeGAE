@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Contact, XTrade</title>
+</head>
+<body>
+<div><a href="{{add_link}}">Add</a></div>
+
+
+{% for contact in contacts %}
+<div>{{contact.first_name}}</div>
+<div>{{contact.last_name}}</div>
+<div>{{contact.phone}}</div>
+<div>{{contact.email}}</div>
+<div>{{contact.role}}</div>
+
+{% endfor %}
+</body>
+</html>

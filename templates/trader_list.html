@@ -3,7 +3,7 @@
 <html>
 <title>Traders List</title>
 
-<a href="./traders/add">Add</a>
+<a href="/traders/add">Add</a>
 
 {% for trader in traders %}
  <div>
@@ -11,6 +11,7 @@
   <span>{{ trader.name|escape }}</span>
   <span>{{ trader.address }}</span>
   <span>{{ trader.website }}</span>
+  <span><a href="/contact/{{trader.key().id()}}">Contacts</a></span>
 
 </div>
 {% endfor %}
