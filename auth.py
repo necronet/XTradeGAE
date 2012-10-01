@@ -1,6 +1,7 @@
 import webapp2
 import jinja2
 import os
+import settings
 from django.utils import simplejson
 from webapp2_extras import auth
 from webapp2_extras import sessions
@@ -81,6 +82,7 @@ class LoginHandler(BaseHandler):
         self.response.out.write(template.render({}))
 
     def post(self):
+        
         username = self.request.POST.get('username')
         password = self.request.POST.get('password')
 
@@ -135,8 +137,6 @@ class CreateUserHandler(BaseHandler):
         user = self.auth.store.user_model.create_user(username, password_raw=password)
 
         if not user[0]: #user is a tuple
-            logging.info( db.GqlQuery("SELECT * FROM User" ))
-
             return user[1] # Error message
         else:
             # User is created, let's try redirecting to login page

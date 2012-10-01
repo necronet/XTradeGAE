@@ -7,6 +7,8 @@ from google.appengine.api import users
 import os
 import logging
 import jinja2
+import settings
+from webapp2_extras import auth
 
 
 jinja_environment = jinja2.Environment(
@@ -37,8 +39,6 @@ config['webapp2_extras.sessions'] = {
     'secret_key': '208e12f0faab5d7c633b3978e04bc5f2'
 }
 
-
-
 app = webapp2.WSGIApplication([
     ('/',MainPage),
     ('/traders[/]*', TraderListPage),
@@ -53,7 +53,7 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/login/', handler=LoginHandler, name='login'),
 	webapp2.Route(r'/logout/', handler=LogoutHandler, name='logout'),
 	webapp2.Route(r'/create/', handler=CreateUserHandler, name='create-user'),],
-                                         debug=True,config=config)
+                                         debug=settings.DEBUG,config=config)
 
 
 
