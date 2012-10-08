@@ -14,6 +14,8 @@ class jsonEncoder(simplejson.JSONEncoder):
             data=dict((p, getattr(obj, p))
                         for p in obj.properties())
             if isinstance(obj, Trader):
+                #Property that was missing id
+                data['id']=obj.key().id()
                 data['contacts']= obj.contacts()
                 data['logo'] =settings.IMAGE_URL%obj.key().id()
             if isinstance(obj, Contact):
