@@ -6,7 +6,7 @@ class BaseModel(db.Model):
     created_on = db.DateTimeProperty(auto_now_add=True)
     modified_on = db.DateTimeProperty(auto_now_add=True)
     modified_by = db.IntegerProperty()
-
+    
 class Trader(BaseModel):
     name = db.StringProperty(required=True)
     address = db.StringProperty(multiline=True)

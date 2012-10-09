@@ -5,8 +5,9 @@ from util import json
 from google.appengine.ext import db
 from google.appengine.api import users
 import os
-from auth import BaseHandler, user_required
+from auth import BaseHandler, user_required, JsonBaseHandler
 import jinja2
+
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -37,21 +38,17 @@ class TraderPage(BaseHandler):
 
         self.save(trader)
 
-
         self.redirect('/traders/')
 
-class JsonTraderPage(BaseHandler):
+class JsonTraderPage(JsonBaseHandler):
     @user_required
-    def get(self, *kwargs):
+    def get(self, *args, **kwargs):
 
         traders_query = Trader.all().order('-created_on')
         traders = traders_query.fetch(50)
-
-        data = json.encode(traders)
-
-        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-        self.response.out.write(data)
-
+        kwargs['data']=json.encode(traders)
+        
+        JsonBaseHandler.get(self,*args,**kwargs)
 
 
 class TraderListPage(BaseHandler):

@@ -1,7 +1,8 @@
+import uuid
+import hashlib
 import webapp2
 import jinja2
 import os
-import settings
 from django.utils import simplejson
 from webapp2_extras import auth
 from webapp2_extras import sessions
@@ -35,13 +36,7 @@ def user_required(handler):
 
     return check_login
 
-
 class BaseHandler(webapp2.RequestHandler):
-    """
-         BaseHandler for all requests
-
-         Holds the auth and session properties so they are reachable for all requests
-     """
 
     def save(self,model):
 
@@ -101,6 +96,49 @@ class LoginHandler(BaseHandler):
             return False
 
 
+class JsonBaseHandler(BaseHandler):
+    def get(self,*args, **kwargs):
+        
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        self.response.headers['etag']=hashlib.sha1(kwargs['data']).hexdigest()
+        self.response.out.write(kwargs['data'])
+
+    class BaseHandler(webapp2.RequestHandler):
+
+        def save(self,model):
+
+            user_id=self.auth.get_user_by_session()['user_id']
+            model.created_by=user_id
+            model.modified_by=user_id
+            model.put()
+
+        def dispatch(self):
+            try:
+                response = super(BaseHandler, self).dispatch()
+                #self.response.write(response)
+            finally:
+                self.session_store.save_sessions(self.response)
+
+        @webapp2.cached_property
+        def auth(self):
+            return auth.get_auth()
+
+        @webapp2.cached_property
+        def session_store(self):
+            return sessions.get_store(request=self.request)
+
+        @webapp2.cached_property
+        def auth_config(self):
+            """
+                  Dict to hold urls for login/logout
+              """
+            return {
+                'login_url': self.uri_for('login'),
+                'logout_url': self.uri_for('logout')
+            }
+
+
+
 class JsonLoginHandler(LoginHandler):
     def post(self):
         try:
@@ -116,8 +154,6 @@ class JsonLoginHandler(LoginHandler):
         except ValueError as e:
             #TODO: improve error message
             return simplejson.dumps({'success':False,'message':'Unparseable JSON string'})
-
-
 
 
 class CreateUserHandler(BaseHandler):
